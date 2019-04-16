@@ -24,6 +24,14 @@
   //Used to validate password and confirmPassword upon submission
   //Proceeds with form submission if the passwords matched
   //if not the form submission is cancelled and shows an alert
+  function validateDetails(form){
+    if(validatePasswordAndConfirmPassword(form) & checkAccountType(form)){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
   function validatePasswordAndConfirmPassword(form){
     if(form.confirmPassword.value==form.password.value){
       alert("Passwords matched");
@@ -43,11 +51,11 @@
   //Works the same as aboves logic in a way
   function checkAccountType(form){
     if(form.accountType.value=="customer"){
-      alert("Proceed")
+      //alert("Proceed")
       return true;
     }
     else if(form.accountType.value=="merchant"){
-      alert("Proceed")
+      //alert("Proceed")
       return true;
     }
     else{
@@ -97,7 +105,8 @@
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                   aria-expanded="false">Pages</a>
                 <ul class="dropdown-menu">
-									<li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+									<li class="nav-item"><a class="nav-link" href="
+                    ">Login</a></li>
                   <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
                   <li class="nav-item"><a class="nav-link" href="tracking-order.html">Tracking</a></li>
                 </ul>
@@ -152,7 +161,7 @@
 					<div class="login_form_inner register_form_inner">
 
 						<h3>Create an account</h3>
-						<form class="row login_form" action="registercustomer.php" id="register_form" method = "post" onsubmit="return validatePasswordAndConfirmPassword(this);">
+						<form class="row login_form" action="registercustomer.php" id="register_form" method = "post" onsubmit="return validateDetails(this)">
               <!--For testing purposes only as of 4-12-19-->
               <div class="col-md-12 form-group">
                 <select name="accountType" required>
