@@ -48,7 +48,7 @@ session_start();
                   aria-expanded="false">Shop</a>
                 <ul class="dropdown-menu">
                   <li class="nav-item"><a class="nav-link" href="category.html">Shop Category</a></li>
-                  <li class="nav-item"><a class="nav-link" href="single-product.html">Product Details</a></li>
+                  <li class="nav-item"><a class="nav-link" href="single-product.php">Product Details</a></li>
                   <li class="nav-item"><a class="nav-link" href="checkout.html">Product Checkout</a></li>
                   <li class="nav-item"><a class="nav-link" href="confirmation.html">Confirmation</a></li>
                   <li class="nav-item"><a class="nav-link" href="cart.html">Shopping Cart</a></li>
@@ -191,7 +191,7 @@ session_start();
             </div>
             <div class="card-body">
               <p>Accessories</p>
-              <h4 class="card-product__title"><a href="single-product.html">Quartz Belt Watch</a></h4>
+              <h4 class="card-product__title"><a href="single-product.php">Quartz Belt Watch</a></h4>
               <p class="card-product__price">$150.00</p>
             </div>
           </div>
@@ -207,7 +207,7 @@ session_start();
             </div>
             <div class="card-body">
               <p>Beauty</p>
-              <h4 class="card-product__title"><a href="single-product.html">Women Freshwash</a></h4>
+              <h4 class="card-product__title"><a href="single-product.php">Women Freshwash</a></h4>
               <p class="card-product__price">$150.00</p>
             </div>
           </div>
@@ -223,7 +223,7 @@ session_start();
             </div>
             <div class="card-body">
               <p>Decor</p>
-              <h4 class="card-product__title"><a href="single-product.html">Room Flash Light</a></h4>
+              <h4 class="card-product__title"><a href="single-product.php">Room Flash Light</a></h4>
               <p class="card-product__price">$150.00</p>
             </div>
           </div>
@@ -239,7 +239,7 @@ session_start();
             </div>
             <div class="card-body">
               <p>Decor</p>
-              <h4 class="card-product__title"><a href="single-product.html">Room Flash Light</a></h4>
+              <h4 class="card-product__title"><a href="single-product.php">Room Flash Light</a></h4>
               <p class="card-product__price">$150.00</p>
             </div>
           </div>
@@ -255,7 +255,7 @@ session_start();
             </div>
             <div class="card-body">
               <p>Accessories</p>
-              <h4 class="card-product__title"><a href="single-product.html">Quartz Belt Watch</a></h4>
+              <h4 class="card-product__title"><a href="single-product.php">Quartz Belt Watch</a></h4>
               <p class="card-product__price">$150.00</p>
             </div>
           </div>
@@ -271,7 +271,7 @@ session_start();
             </div>
             <div class="card-body">
               <p>Beauty</p>
-              <h4 class="card-product__title"><a href="single-product.html">Women Freshwash</a></h4>
+              <h4 class="card-product__title"><a href="single-product.php">Women Freshwash</a></h4>
               <p class="card-product__price">$150.00</p>
             </div>
           </div>
@@ -287,7 +287,7 @@ session_start();
             </div>
             <div class="card-body">
               <p>Decor</p>
-              <h4 class="card-product__title"><a href="single-product.html">Room Flash Light</a></h4>
+              <h4 class="card-product__title"><a href="single-product.php">Room Flash Light</a></h4>
               <p class="card-product__price">$150.00</p>
             </div>
           </div>
@@ -303,7 +303,7 @@ session_start();
             </div>
             <div class="card-body">
               <p>Decor</p>
-              <h4 class="card-product__title"><a href="single-product.html">Room Flash Light</a></h4>
+              <h4 class="card-product__title"><a href="single-product.php">Room Flash Light</a></h4>
               <p class="card-product__price">$150.00</p>
             </div>
           </div>
