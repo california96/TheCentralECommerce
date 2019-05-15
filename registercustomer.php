@@ -42,17 +42,17 @@ if($isEmailValid){
     echo "Email Valid";
     switch($roleID){
       case 1:
-        //Meaning merchant
-        $sql = "INSERT INTO users(email, password, firstName, lastName, roleID, businessName) VALUES(?, ?, ?, ?, ?, ?)";
-        $businessName = $_REQUEST['businessName'];
+        //Meaning customer
+        $sql = "INSERT INTO users(email, password, firstName, lastName, roleID) VALUES(?, ?, ? ,?,?)";
+
         if($stmt = mysqli_prepare($conn, $sql)){
-          mysqli_stmt_bind_param($stmt, "ssssds", $email, $hashedPassword, $firstName,$lastName, $roleID, $businessName);
+          mysqli_stmt_bind_param($stmt, "ssssd", $email, $hashedPassword, $firstName,$lastName, $roleID);
 
           if(mysqli_stmt_execute($stmt)){
             echo "Member registered";
-            setcookie("userLogged", $firstName . " " . $lastName, 0);
-            header("Location: index.php");
-            exit;
+            setcookie("userLogged", $email, 0);
+              header("Location: index.php");
+              exit;
           }
           else{
             echo "Error: $stmt. " . mysqli_error($conn);
@@ -64,16 +64,16 @@ if($isEmailValid){
         mysqli_close($conn);
         break;
       case 2:
-        //Meaning customer
-        $sql = "INSERT INTO users(email, password, firstName, lastName, roleID) VALUES(?, ?, ? ,?,?)";
-
+        //Meaning merchant
+        $sql = "INSERT INTO users(email, password, firstName, lastName, roleID, businessName) VALUES(?, ?, ?, ?, ?, ?)";
+        $businessName = $_REQUEST['businessName'];
         if($stmt = mysqli_prepare($conn, $sql)){
-          mysqli_stmt_bind_param($stmt, "ssssd", $email, $hashedPassword, $firstName,$lastName, $roleID);
+          mysqli_stmt_bind_param($stmt, "ssssds", $email, $hashedPassword, $firstName,$lastName, $roleID, $businessName);
 
           if(mysqli_stmt_execute($stmt)){
             echo "Member registered";
-            setcookie("userLogged", $firstName . " " . $lastName, 0);
-            header("Location: index.php");
+            setcookie("userLogged", $email, 0);
+            header("Location: merchantprofile.php");
             exit;
           }
           else{
@@ -104,11 +104,11 @@ function validEmail($rEmail){
 }
 function accountTypeVerification($fRoleName){
   switch($fRoleName){
-    case "merchant":
+    case "customer":
       return 1;
 
       break;
-    case "customer":
+    case "merchant":
       return 2;
 
       break;

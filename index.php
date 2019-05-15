@@ -64,10 +64,10 @@
 
         while($row = @mysqli_fetch_array($fortrending)){?>
         <!--div class="row"-->
-          <div class="col-md-6 col-lg-4 col-xl-3">
+          <div class="col-md-6 col-lg-4 col-xl-3 mt-2 mb-2 float-left">
             <div class="card text-center card-product">
               <div class="card-product__img">
-                <img class="card-img" src=<?php echo $row['productImage'];?> alt="">
+                <img class="card-img-top" src=<?php echo $row['productImage'];?> alt="image" width="250" height="250">
                 <ul class="card-product__imgOverlay">
                   <li><button><i class="ti-search"></i></button></li>
                   <li><button><i class="ti-shopping-cart"></i></button></li>
