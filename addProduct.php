@@ -21,7 +21,7 @@ require_once('config.php');
  if($stmt = mysqli_prepare($conn, $sql)){
    mysqli_stmt_bind_param($stmt,"ssdsddd",$productName,$productImage,$productPrice,$productDescription,$productQuantity,$userID,$productType);
    if(mysqli_stmt_execute($stmt)){
-     header("Location: login.php");
+     header("Location: merchantprofile.php");
      exit;
    }
    else{

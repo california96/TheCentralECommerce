@@ -1,5 +1,5 @@
 <?php
-  include('config.php');
+  require_once('config.php');
 ?>
 <?php
 //you can't be here, if you already have a cookie
@@ -25,12 +25,12 @@
   <link rel="stylesheet" href="vendors/nouislider/nouislider.min.css">
   <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
   <link rel="stylesheet" href="css/style.css">
+
 </head>
 <body>
 <?php include('header.php');
 ?>
-<!--content-->
-
+<!-- Merchant body -->
 <div class="row">
   <div class="container-fluid">
     <?php include('merchanttemplate.php'); ?>
@@ -38,10 +38,21 @@
       <div class="container-fluid">
         <div class="column w-75 mt-5">
           <h2 class="ml-3 mb-4">Product Details</h2>
-          <form class="row login_form" action="addProduct.php" id="productForm" method="post">
+          <form class="row login_form" action="updateProduct.php" id="updateProduct" method="post">
             <div class="col-md-12 form-group ml-3">
+              <?php
+                $pid = $_POST['hiddenField'];
+                $sql = "SELECT * FROM products WHERE productID = ?";
+                if($stmt = $conn->prepare($sql)){
+                  $stmt->bind_param('i', $pid);
+                  $stmt->execute();
+                  $result = $stmt->get_result();
+                  $row = $result->fetch_assoc();
+                }
+                $proType = detCateg($row['categoryID']);
+              ?>
               <select id="productType" name="productType"  required>
-                <option selected disabled hidden>Choose product type</option>
+                <option selected value="<?= echo $proType; ?>"disabled hidden><?php echo $proType; ?></option>
                 <option value="Clothing">Clothing</option>
                 <option value="Services">Services</option>
                 <option value="Accessories">Accessories</option>
@@ -53,41 +64,42 @@
               <p id="pt-error"></p>
             </div>
             <div class="col-md-12 form-group ml-3">
-              <input id="productImage" name="productImage" type="text" placeholder="Product Image" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Image'" required>
+              <input id="productImage" name="productImage" type="text" placeholder="Product Image" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Image'" value="<?=$row['productImage']?>" required>
               <p id="pi-error"></p>
             </div>
             <div class="col-md-12 form-group ml-3">
-              <input id="productName" name="productName" type="text" placeholder="Product Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Name'" required>
+              <input id="productName" name="productName" type="text" placeholder="Product Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Name'" value="<?=$row['productName']?>" required>
               <p id="pn-error"></p>
             </div>
             <div class="col-md-12 form-group ml-3">
-              <input id="productQuantity" name="productQuantity" type="number" placeholder="Product Quantity" min="1" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Quantity'" required>
+              <input id="productQuantity" name="productQuantity" type="number" placeholder="Product Quantity" min="1" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Quantity'" value="<?=$row['productQuantity']?>" required>
               <p id="pq-error"></p>
             </div>
             <div class="col-md-12 form-group ml-3">
-              <input id="productPrice" name="productPrice" type="number" placeholder="Product Price" min="1" step="0.25" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Price'" required>
+              <input id="productPrice" name="productPrice" type="number" placeholder="Product Price" min="1" step="0.25" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Price'" value="<?=$row['productPrice']?>" required>
               <p id="pq-error"></p>
             </div>
             <div class="col-md-12 form-group ml-3">
-              <textarea id="productDescription" name="productDescription" rows="4" cols="60" placeholder="Product description...." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product description'" style="resize:none;border-radius: 6px;" required></textarea>
+              <textarea id="productDescription" name="productDescription" rows="4" cols="60" placeholder="Product description...." onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product description'" style="resize:none;border-radius: 6px;" required><?=$row['productDescription']?></textarea>
               <p id="pq-error"></p>
             </div>
             <div class="col-md-12 form-group ml-3">
-              <button type="submit" id="addButton" value="submit" class="btn btn-success">Submit</button>
+              <button type="submit" id="addButton" value="submit" class="btn btn-success">Update</button>
               <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
               <input type="hidden" id="hiddenField" name="hiddenField" value="<?=$_COOKIE['userLogged']?>">
-
             </div>
           </form>
         </div>
       </div>
     </div>
-  </div>
+	</div>
 </div>
 
-<!--contentend-->
+<!-- End Merchant Body -->
+
 <?php include('footer.php');
 ?>
+
 <script src="vendors/jquery/jquery-3.2.1.min.js"></script>
 <script src="vendors/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="vendors/skrollr.min.js"></script>
@@ -96,12 +108,33 @@
 <script src="vendors/jquery.ajaxchimp.min.js"></script>
 <script src="vendors/mail-script.js"></script>
 <script src="js/main.js"></script>
-<script>
-  $(document).ready(function(){
-    $('#cancelButton').click(function(){
-      window.location.replace("merchantprofile.php");
-    });
-  });
-</script>
+<?php
+function detCateg($categID){
+  switch($categID){
+    case 1:
+    return "Clothing";
+    case 2:
+    return "Services";
+    break;
+    case 3:
+    return "Accessories";
+    break;
+    case 4:
+    return "Books";
+    break;
+    case 5:
+    return "Food";
+    break;
+    case 6:
+    return "Beauty";
+    break;
+    case 7:
+    return "Electronics";
+    break;
+
+  }
+}
+?>
+
 </body>
 </html>

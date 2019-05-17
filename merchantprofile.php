@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="vendors/nouislider/nouislider.min.css">
   <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
   <link rel="stylesheet" href="css/style.css">
+
 </head>
 <body>
 <?php include('header.php');
@@ -32,45 +33,7 @@
 <!-- Merchant body -->
 <div class="row">
   <div class="container-fluid">
-    <div class="col-sm-3 float-left">
-      <div class="jumbotron jumbotron-fluid">
-        <div class="container-fluid">
-          <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/44ea7750-be82-490f-ae01-c88d3b59d871/d8eiz8l-6ab027d0-1299-47f6-b257-a3fce4ac453c.png/v1/fill/w_1024,h_576,q_80,strp/nura_rikuo___nurarihyon_no_mago_by_klydetheslayer_d8eiz8l-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTc2IiwicGF0aCI6IlwvZlwvNDRlYTc3NTAtYmU4Mi00OTBmLWFlMDEtYzg4ZDNiNTlkODcxXC9kOGVpejhsLTZhYjAyN2QwLTEyOTktNDdmNi1iMjU3LWEzZmNlNGFjNDUzYy5wbmciLCJ3aWR0aCI6Ijw9MTAyNCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.s4o58ik3xWCHzFZxGyXMzCYBriKJMkjw50sNc5ojpmo" class="rounded mx-auto d-block img-fluid" alt="Nura">
-          <h1 class="text-center" id="fullName">
-            <?php
-            $email = $_COOKIE['userLogged'];
-            $sql = "SELECT firstName, lastName, roleID FROM users where email = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param('s', $email);
-            $stmt->execute();
-            $stmt->store_result();
-            $stmt->bind_result($fname, $lname, $rid);
-            $row = $stmt->fetch();
-            echo $fname . " " . $lname;
-            mysqli_stmt_close($stmt);
-            ?>
-          </h1>
-          <p class="text-center" id="accountType">Merchant</p>
-          <br><br>
-          <a href="#" class="btn btn-outline-secondary btn-block" role="button">
-          Products  &nbsp
-          <span class="badge badge-dark">
-            <?php
-
-            ?>
-          </span>
-          </a>
-          <a href="#" class="btn btn-outline-secondary btn-block" role="button">
-          Messages  &nbsp
-          <span class="badge badge-dark">3</span>
-          </a>
-          <a href="#" class="btn btn-outline-secondary btn-block" role="button">
-          Change Password
-          </a>
-
-        </div>
-      </div>
-    </div>
+    <?php include('merchanttemplate.php'); ?>
     <div class="col-sm-9 float-right">
       <div class="container-fluid">
         <br><br><br>
@@ -138,7 +101,7 @@
                   }
                   $this_page_first_result = ($page - 1) * $productsPerPage;
 
-                  $sql = "SELECT productName, productPrice, productQuantity, productImage FROM products where userID = ? LIMIT " . $this_page_first_result . ',' .$productsPerPage;
+                  $sql = "SELECT productName, productPrice, productQuantity, productImage, productID FROM products where userID = ? LIMIT " . $this_page_first_result . ',' .$productsPerPage;
                   $stmt = $conn->prepare($sql);
                   $stmt->bind_param("i", $uid);
                   $stmt->execute();
@@ -151,14 +114,23 @@
                       <div class="card-body">
                         <h4 class="card-title text-center"><?php echo $row['productName']; ?></h4>
                         <p class="card-text text-center">Php <?php echo $row['productPrice']; ?></p>
-                        <a href="#" class="btn btn-primary w-100 mb-2">Edit</a>
-                        <a href="#" class="btn btn-danger w-100 mb-2">Remove</a>
+                        <!--<a id="edit-button/<?php echo $row['productID']; ?>" class="btn btn-primary w-100 mb-2">Edit</a>-->
+                        <!--<a id="remove-button/<?php echo $row['productID'];?>" class="btn btn-danger w-100 mb-2 remButton">Remove</a>-->
+                        <form action="updateProductForm.php" method="post">
+                          <input type="hidden" class="tracker" name="hiddenField" value="<?=$row['productID']?>">
+                          <button id="update-button/<?php echo $row['productID']; ?>" class="btn btn-primary w-100 mb-2 updateButton">Update</button>
+                        </form>
+                        <button id="remove-button/<?php echo $row['productID'];?>" class="btn btn-danger w-100 mb-2 remButton">Remove</button>
                         <p class="card-text text-center">In stock: <?php echo $row['productQuantity']; ?></p>
                        </div>
+                    </div>
+                    <div class="text-center">
+
                     </div>
                   </div>
           <?php
                 }
+                $stmt->close();
           ?>
 
           <?php
@@ -187,7 +159,6 @@
         <?php
 
         ?>
-
           <div class="column w-25 float-left">
             <br>
             <a href="productform.php" class="btn btn-success w-100 mb-2">Add Product</a>
@@ -211,7 +182,39 @@
 <script src="vendors/jquery.ajaxchimp.min.js"></script>
 <script src="vendors/mail-script.js"></script>
 <script src="js/main.js"></script>
+<script>
+  $(document).ready(function(){
+    $(".remButton").on("click", function(){
+      var remid = $(this).attr('id');
+      var sure = confirm("Are you sure you want to remove this product?");
+      if(sure){
+        //alert(remid);
+        $.ajax({
+          method:"POST",
+          url:"removeProduct.php",
+          data:{remid:remid},
+          success:function(data){
+            if(data=="No"){
+              //alert("Unsuccessful");
 
+            }
+            else if(data=="Yes"){
+              location.reload();
+              //alert("Successfully removed");
+
+            }
+            else{
+              //alert(data);
+            }
+          }
+        });
+      }else{
+        //alert("Cancelled");
+      }
+    });
+    
+  });
+</script>
 </body>
 </html>
 <!-- Debugging Codes -->
