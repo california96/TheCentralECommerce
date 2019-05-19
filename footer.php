@@ -1,3 +1,6 @@
+<?php
+require_once('config.php');
+?>
 
 <!--================ Start footer Area  =================-->
 <footer class="footer">
@@ -26,7 +29,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-lg-2 col-md-6 col-sm-6">
+        <!--div class="col-lg-2 col-md-6 col-sm-6">
           <div class="single-footer-widget instafeed">
             <h4 class="footer_title">Gallery</h4>
             <ul class="list instafeed d-flex flex-wrap">
@@ -38,7 +41,7 @@
               <li><img src="img/gallery/r8.jpg" alt=""></li>
             </ul>
           </div>
-        </div>
+        </div-->
         <div class="offset-lg-1 col-lg-3 col-md-6 col-sm-6">
           <div class="single-footer-widget tp_widgets">
             <h4 class="footer_title">Contact Us</h4>
@@ -79,7 +82,9 @@
       <div class="row d-flex">
         <p class="col-lg-12 footer-text text-center">
           <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> of The Elite | By using this website, you have read, understood, and agreed to our Cookie Policies.</a>
+</p>
       </div>
     </div>
   </div>
