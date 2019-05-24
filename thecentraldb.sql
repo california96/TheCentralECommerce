@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2019 at 02:39 PM
+-- Generation Time: May 24, 2019 at 02:09 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.3
 
@@ -60,17 +60,26 @@ CREATE TABLE `products` (
   `productDescription` varchar(255) NOT NULL,
   `productQuantity` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
-  `categoryID` int(11) NOT NULL
+  `categoryID` int(11) NOT NULL,
+  `status` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`productID`, `productName`, `productImage`, `productPrice`, `productDescription`, `productQuantity`, `userID`, `categoryID`) VALUES
-(2, 'YashicaFlex 80 mm 3.5', 'img/product/yashicaflex.png', 4800, 'Good condition.\r\nCLA\'d recently\r\nReady to use\r\nShutter Speed okay', 1, 4, 7),
-(3, 'Legendary Demon Hunting Jacket', 'img/product/legendarydemonhunterjacket.png', 400000, 'The jacket of a legendary demon hunter. \r\nIt is said that deadweights hate wearing this.', 5, 4, 1),
-(8, 'RC Car', 'img/product/product6.png', 678.75, 'It\'s a remote control car, that requires a  2 AA batteries for the car itself and 3 AAA batteries for the remote.', 190, 7, 1);
+INSERT INTO `products` (`productID`, `productName`, `productImage`, `productPrice`, `productDescription`, `productQuantity`, `userID`, `categoryID`, `status`) VALUES
+(1, 'Canon AE-1 Program', 'img/product/canonae1program.png', 4500, 'Includes Canon FD Lens\r\nISO 12 to 3200\r\nAperture f1.8 - f16', 1, 4, 7, 0),
+(2, 'YashicaFlex 80 mm 3.5', 'img/product/yashicaflex.png', 4800, 'Good condition.\r\nCLA\'d recently\r\nReady to use\r\nShutter Speed okay', 1, 4, 7, 0),
+(3, 'Legendary Demon Hunting Jacket', 'img/product/legendarydemonhunterjacket.png', 400000, 'The jacket of a legendary demon hunter. \r\nIt is said that deadweights hate wearing this.', 5, 4, 1, 0),
+(4, 'Tees', 'Tees', 1200, 'Its a tee', 1, 8, 1, 0),
+(5, 'Secretssasa', 'Secret', 1500, 'Its a secret', 1, 8, 2, 0),
+(6, 'Accessory of the Gods', 'Accessory of the Gods', 2500, 'Its an accessory', 199, 8, 3, 0),
+(7, 'sad', 'sad', 12, 'xd', 12, 8, 1, 0),
+(8, 'sad', '21', 23, 'd', 12, 8, 4, 0),
+(9, 'sad', 'sad', 12, 'sadasdasdasd', 12, 8, 1, 0),
+(10, 'car>', 'img/product/product7.png', 23, 'sad', 213, 8, 2, 1),
+(12, 'sad', 'Sad', 12, 'sad', 12, 10, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -124,24 +133,24 @@ CREATE TABLE `users` (
   `firstName` varchar(100) NOT NULL,
   `lastName` varchar(100) NOT NULL,
   `businessName` varchar(150) DEFAULT NULL,
-  `roleID` int(11) NOT NULL,
-  `address` varchar(255) NOT NULL
+  `address` varchar(255) NOT NULL,
+  `roleID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`userID`, `email`, `password`, `firstName`, `lastName`, `businessName`, `roleID`, `address`) VALUES
-(1, 'tonystark@starkindustries.com', 'iamironman', 'Tony', 'Stark', NULL, 1, ''),
-(2, 'brucewayne@wayneenterprises.com', 'notbatman', 'Bruce', 'Wayne', 'Wayne Enterprises', 3, ''),
-(3, 'haljordan@iacademy.edu.ph', '$2y$10$W1aAYt5e5x41mhJOU1rOnOA9.r7SP6Pu0gewYxvHzJgtXmvPTSIu2', 'Hal', 'Jordan', NULL, 1, ''),
-(4, 'barryallen@iacademy.edu.ph', '$2y$10$ojW/LLkO1QblHI2dsvCvRO3ragHVmHsFr/INtyzRr2FQWVR4Rnrnu', 'Barry', 'Allen', 'Star Labs', 3, ''),
-(5, 'jonathancrane@iacademy.edu.ph', '$2y$10$gYb.PRjCGJNazXsQS5i7E.iHeLr/jEt29coRShbNwWa/D.q2ycG26', 'Jonathan', 'Crane', NULL, 1, ''),
-(6, 'harveydent@iacademy.edu.ph', '$2y$10$sjhGl4WfupcfZcFMvCQ3Ye8Y8s5Dep/Bz5DU8y8PnKdleXKDkWaku', 'Harvey', 'Dent', NULL, 1, ''),
-(7, 'ak@iacademy.edu.ph', '$2y$10$CCiwtqv0zrhc6K5Ek7qYtegv7YpCfulgqGD0SCgfMrxEwBMmCH7mG', 'Aaron', 'Kwek', 'Businesss', 2, ''),
-(8, 'ka@iacademy.edu.ph', '$2y$10$BJxtghodkBqHZDZQ1kqIBOFvVrlMfhKD7rS1Qprzw/YedGIjjYaCK', 'kwek', 'aaron', NULL, 1, ''),
-(9, 'kk@iacademy.edu.ph', '$2y$10$adpzxMniCBKW1J3x2mjFhOogmvNIqkVQWbx2BGUqEls3KpJHp3u2G', 'Kwek', 'Kwek', NULL, 1, 'Laguna');
+INSERT INTO `users` (`userID`, `email`, `password`, `firstName`, `lastName`, `businessName`, `address`, `roleID`) VALUES
+(1, 'tonystark@starkindustries.com', 'iamironman', 'Tony', 'Stark', NULL, '', 1),
+(2, 'brucewayne@wayneenterprises.com', 'notbatman', 'Bruce', 'Wayne', 'Wayne Enterprises', '', 3),
+(3, 'haljordan@iacademy.edu.ph', '$2y$10$W1aAYt5e5x41mhJOU1rOnOA9.r7SP6Pu0gewYxvHzJgtXmvPTSIu2', 'Hal', 'Jordan', NULL, '', 1),
+(4, 'barryallen@iacademy.edu.ph', '$2y$10$ojW/LLkO1QblHI2dsvCvRO3ragHVmHsFr/INtyzRr2FQWVR4Rnrnu', 'Barry', 'Allen', 'Star Labs', '', 3),
+(5, 'jonathancrane@iacademy.edu.ph', '$2y$10$gYb.PRjCGJNazXsQS5i7E.iHeLr/jEt29coRShbNwWa/D.q2ycG26', 'Jonathan', 'Crane', NULL, '', 1),
+(6, 'harveydent@iacademy.edu.ph', '$2y$10$sjhGl4WfupcfZcFMvCQ3Ye8Y8s5Dep/Bz5DU8y8PnKdleXKDkWaku', 'Harvey', 'Dent', NULL, '', 1),
+(8, 'ak@iacademy.edu.ph', '$2y$10$t4qNyXeWqljzq1MksSgAAuqetQ/Ma5Af8cmxJ.YZrPONJ9I.QyVm6', 'Aaron', 'Kwek', 'Kwek', '', 2),
+(9, 'ka@iacademy.edu.ph', '$2y$10$50SLXiffzDrLrTouAnGF..xYlPNFdHr/4WLQuawUuijPmWgCdVr.q', 'Kwek', 'Aaron', NULL, 'Universe 7, Planet Earth', 1),
+(10, 'akm@iacademy.edu.ph', '$2y$10$wrX.e1dBuAH0dNDNL4xkueDuo0N2RpKnTAu5NGZ2GGPlcRdJigQQ6', 'AaronM', 'KwekM', 'The Business', '', 2);
 
 --
 -- Indexes for dumped tables
@@ -185,7 +194,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `productID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `productID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `transactions`
@@ -197,7 +206,7 @@ ALTER TABLE `transactions`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
