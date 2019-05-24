@@ -1,9 +1,9 @@
 <?php
-session_start();
-?>
-<?php
   require_once('config.php');
+  include "Cart.php";
+  $cart = new Cart;
 ?>
+
 <!--================ Start Header Menu Area =================-->
 <header class="header_area">
   <div class="main_menu">
@@ -24,62 +24,57 @@ session_start();
                 aria-expanded="false">Shop</a>
               <ul class="dropdown-menu">
                 <li class="nav-item"><a class="nav-link" href="category.php">Shop Category</a></li>
-                <li class="nav-item"><a class="nav-link" href="cart.php">Shopping Cart</a></li>
               </ul>
             </li>
             <li class="nav-item submenu dropdown">
               <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                 aria-expanded="false">Pages</a>
               <ul class="dropdown-menu">
+
                 <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
                 <li class="nav-item"><a class="nav-link" href="tracking-order.html">Tracking</a></li>
               </ul>
             </li>
             <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+            <form action = "#" method = "POST">
+            <!--li class="nav-item"><input class = "form-control mr sm-2" type = 'text' placeholder = 'Search'></li-->
+          </form>
           </ul>
 
           <ul class="nav-shop">
-            <li class="nav-item"><button><i class="ti-search"></i></button></li>
-            <!--<li class="nav-item"><button><i class="ti-shopping-cart"></i><span class="nav-shop__circle">3</span></button> </li>-->
-            <!--<li class="nav-item"><a class="button button-header" href="#">Buy Now</a></li>-->
-          </ul>
-          <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
-          <li class="nav-item submenu dropdown">
-            <?php
-              if(isset($_COOKIE['userLogged'])){
-            ?>
-                <a href="#" class="button-header nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                  <?php
-                    $email = $_COOKIE['userLogged'];
-                    $sql = "SELECT firstName, lastName, roleID FROM users where email = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param('s', $email);
-                    $stmt->execute();
-                    $stmt->store_result();
-                    $stmt->bind_result($fname, $lname, $rid);
-                    $row = $stmt->fetch();
-                    echo $fname . " " . $lname;
-                  ?>
-                </a>
-                <ul class="dropdown-menu">
-                  <?php
-                  if($rid==1){
-                  ?>
-                    <li class="nav-item"><a class="nav-link" href="customerprofile.php">View Profile</a></li>
-                  <?php
-                  } else {
-                  ?>
-                    <li class="nav-item"><a class="nav-link" href="merchantprofile.php">View Profile</a></li>
-                  <?php
-                  }
-                  ?>
-                  <li class="nav-item"><a class="nav-link" href="logout.php">Logout</a></li>
-                </ul>
-          <?php } else { ?>
-            <li class="nav-item"><a class="button button-header" href="login.php">Login</a></li><?php }?>
-          </li>
-          </ul>
 
+            <li class="nav-item"><button><a href = "viewcart.php"><i class="ti-shopping-cart"></i><span class="nav-shop__circle"><?php echo count($cart->contents());?></span></a></button> </li>
+          </ul>
+          <ul class="navbar-nav menu_nav ml-auto mr-auto">
+            <?php
+            if(isset($_COOKIE['userLogged'])){ ?>
+              <?php
+                $email = $_COOKIE['userLogged'] != null ? $_COOKIE['userLogged'] : null;
+                $sql = "SELECT firstName, lastName, roleID, businessName FROM users where email = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param('s', $email);
+                $stmt->execute();
+                $stmt->store_result();
+                $stmt->bind_result($fname, $lname, $rid, $bname);
+                $row = $stmt->fetch();
+                ?>
+              <li class="nav-item submenu dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">My Account</a>
+                <ul class="dropdown-menu">
+                  <?php if($rid == 2){?>
+                  <li class="nav-item"><a class="nav-link" href="merchantprofile.php"><?php echo $bname;?></a></li>
+                  <li class="nav-item"><a class="nav-link" href="#">Messages</a></li>
+                  <?php }else{?>
+                  <li class="nav-item"><a class="nav-link" href="customerprofile.php"><?php echo $fname . " " . $lname;?></a></li>
+                  
+                <?php }?>
+                  <li class="nav-item"><a class="nav-link" href="logout.php">Signout</a></li>
+                </ul>
+              </li>
+          <?php } else{ ?>
+            <li class="nav-item"><a class="button button-header" href="login.php">Login</a></li><?php }?>
+          </ul>
         </div>
       </div>
     </nav>

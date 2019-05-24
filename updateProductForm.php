@@ -13,7 +13,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>The Central - Login</title>
+  <title></title>
 	<link rel="icon" href="img/Fevicon.png" type="image/png">
   <link rel="stylesheet" href="vendors/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="vendors/fontawesome/css/all.min.css">
@@ -33,7 +33,6 @@
 <!-- Merchant body -->
 <div class="row">
   <div class="container-fluid">
-    <?php include('merchanttemplate.php'); ?>
     <div class="col-sm-5 float-left">
       <div class="container-fluid">
         <div class="column w-75 mt-5">
@@ -51,8 +50,8 @@
                 }
                 $proType = detCateg($row['categoryID']);
               ?>
-              <select id="productType" name="productType"  required>
-                <option selected value="<?= echo $proType; ?>"disabled hidden><?php echo $proType; ?></option>
+                <select id="productType" name="productType"  required>
+                <option selected value="<?=$proType;?>"><?php echo $proType; ?></option>
                 <option value="Clothing">Clothing</option>
                 <option value="Services">Services</option>
                 <option value="Accessories">Accessories</option>
@@ -84,9 +83,9 @@
               <p id="pq-error"></p>
             </div>
             <div class="col-md-12 form-group ml-3">
-              <button type="submit" id="addButton" value="submit" class="btn btn-success">Update</button>
+              <button type="submit" id="updateButton" value="submit" class="btn btn-success">Update</button>
               <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
-              <input type="hidden" id="hiddenField" name="hiddenField" value="<?=$_COOKIE['userLogged']?>">
+              <input type="hidden" id="hiddenField" name="hiddenField" value="<?=$pid?>">
             </div>
           </form>
         </div>
@@ -108,6 +107,13 @@
 <script src="vendors/jquery.ajaxchimp.min.js"></script>
 <script src="vendors/mail-script.js"></script>
 <script src="js/main.js"></script>
+<script>
+  $(document).ready(function(){
+    $('#cancelButton').click(function(){
+      window.location.replace("merchantprofile.php");
+    });
+  });
+</script>
 <?php
 function detCateg($categID){
   switch($categID){

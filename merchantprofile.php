@@ -33,25 +33,33 @@
 <!-- Merchant body -->
 <div class="row">
   <div class="container-fluid">
-    <?php include('merchanttemplate.php'); ?>
-    <div class="col-sm-9 float-right">
+    <div class="column w-75 float-left mt-3">
+      <?php
+        //start sql query for searching of products of the logged on users
+        //get the userID of the logged on user
+        $email = $_COOKIE['userLogged'];
+        $sql = "SELECT userID,businessName FROM users WHERE email = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        //fetching result would go here, but will be covered later
+        $stmt->store_result();
+        $stmt->bind_result($uid,$bname);
+        $row = $stmt->fetch();
+        $stmt->close();
+        //success getting the userid of the user
+        ?>
+
+    </div>
+    <div class="column w-25 text-center float-right">
+      <a href="productform.php" class="btn btn-success w-50 mt-3">Add Product</a>
+
+      <button id="publishButton" class="btn btn-success w-50 mt-3">Publish Products</button>
+    </div>
+    <div class="col-sm-12 float-left">
       <div class="container-fluid">
         <br><br><br>
-        <?php
-          //start sql query for searching of products of the logged on users
-          //get the userID of the logged on user
-          $email = $_COOKIE['userLogged'];
-          $sql = "SELECT userID FROM users WHERE email = ?";
-          $stmt = $conn->prepare($sql);
-          $stmt->bind_param("s", $email);
-          $stmt->execute();
-          //fetching result would go here, but will be covered later
-          $stmt->store_result();
-          $stmt->bind_result($uid);
-          $row = $stmt->fetch();
-          $stmt->close();
-          //success getting the userid of the user
-          ?>
+
 
           <?php
           $sql = "SELECT productName, productPrice, productQuantity, productImage FROM products where userID = ?";
@@ -63,7 +71,7 @@
           <!-- end of retrieving of all the data that belongs to the user -->
           <?php
             //No of products per page
-            $productsPerPage = 3;
+            $productsPerPage = 10;
             //No of total rows/products
             $numberOfProducts = $result->num_rows;
             //No of total pages
@@ -82,13 +90,13 @@
             if($result->num_rows === 0){
           ?>
               <div class="column w-100 float-left mr-2 mb-3">
-                <h1>No Products</h1>
+                <h1 id="noproducts">No Products</h1>
               </div>
           <?php
             } else {
                   $stmt->close();
                   //No of products per page
-                  $productsPerPage = 3;
+                  $productsPerPage = 10;
                   //No of total rows/products
                   $numberOfProducts = $result->num_rows;
                   //No of total pages
@@ -101,14 +109,21 @@
                   }
                   $this_page_first_result = ($page - 1) * $productsPerPage;
 
-                  $sql = "SELECT productName, productPrice, productQuantity, productImage, productID FROM products where userID = ? LIMIT " . $this_page_first_result . ',' .$productsPerPage;
+                  $sql = "SELECT productName, productPrice, productQuantity, productImage, productID, status FROM products where userID = ? LIMIT " . $this_page_first_result . ',' .$productsPerPage;
                   $stmt = $conn->prepare($sql);
                   $stmt->bind_param("i", $uid);
                   $stmt->execute();
                   $result = $stmt->get_result();
                 while($row = $result->fetch_assoc()) {
           ?>
-                  <div class="column w-25 float-left mr-2 mb-3">
+                  <div class="column float-left mr-1 mb-5" style="width:200">
+                    <!-- Checkbox -->
+                    <?php if($row['status']==1){?>
+                            <input type="checkbox" id="status/<?php echo $row['productID']; ?>" class="chbStatus" name="status" checked> Available on the Market
+                    <?php }else{?>
+                            <input type="checkbox" id="status/<?php echo $row['productID']; ?>" class="chbStatus" name="status" > Available on the Market
+                    <?php }?>
+
                     <div class="card w-100" >
                       <img class="card-img-top" src=<?php echo $row['productImage'];?> class="rounded mx-auto d-block img-fluid" width="250" height="250">
                       <div class="card-body">
@@ -138,7 +153,7 @@
           ?>
 			  <!--Image Gallery-->
         <!--Image Gallery-->
-        <div class="column w-75 float-left">
+        <div class="column w-100 float-left mb-5">
           <br>
             <ul class="pagination">
         <?php
@@ -159,10 +174,7 @@
         <?php
 
         ?>
-          <div class="column w-25 float-left">
-            <br>
-            <a href="productform.php" class="btn btn-success w-100 mb-2">Add Product</a>
-          </div>
+
 		</div>
 
 	  </div>
@@ -212,7 +224,49 @@
         //alert("Cancelled");
       }
     });
-    
+    //Supposedly end of the remove button script
+  });
+</script>
+<script>
+  $(document).ready(function(){
+    $("#publishButton").on("click", function(){
+      if($('#noproducts').length){
+        //alert("noproducts exists");
+        alert("There are no products to publish");
+      }else{
+        //alert("noproducts does not exists");
+        var chb = document.getElementsByClassName('chbStatus');
+        var length = chb.length;
+        for (var i = 0; i < length; i++) {
+          if(i==0){
+            var id = $(chb[i]).attr('id') + "/" + chb[i].checked;
+          }
+          else{
+            var id = id + "," + $(chb[i]).attr('id') + "/" + chb[i].checked;
+          }
+        }
+        $.ajax({
+          method:"POST",
+          url:"updateStatus.php",
+          data:{id:id,length:length},
+          success:function(data){
+            if(data=="No"){
+              alert("Unsuccessful");
+
+            }
+            else if(data=="Yes"){
+              location.reload();
+              //alert("Successfully removed");
+
+            }
+            else{
+              alert(data);
+            }
+          }
+        });
+      }
+    });
+    //Supposedly end of the remove button script
   });
 </script>
 </body>

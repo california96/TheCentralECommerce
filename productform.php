@@ -33,7 +33,7 @@
 
 <div class="row">
   <div class="container-fluid">
-    <?php include('merchanttemplate.php'); ?>
+    <?php //include('merchanttemplate.php'); ?>
     <div class="col-sm-5 float-left">
       <div class="container-fluid">
         <div class="column w-75 mt-5">
