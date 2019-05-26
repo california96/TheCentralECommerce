@@ -38,7 +38,7 @@
       <div class="container-fluid">
         <div class="column w-75 mt-5">
           <h2 class="ml-3 mb-4">Product Details</h2>
-          <form class="row login_form" action="addProduct.php" id="productForm" method="post">
+          <form class="row login_form" action="addProduct.php" id="productForm" method="post" enctype="multipart/form-data">
             <div class="col-md-12 form-group ml-3">
               <select id="productType" name="productType"  required>
                 <option selected disabled hidden>Choose product type</option>
@@ -53,7 +53,7 @@
               <p id="pt-error"></p>
             </div>
             <div class="col-md-12 form-group ml-3">
-              <input id="productImage" name="productImage" type="text" placeholder="Product Image" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Image'" required>
+              <input id="productImage" name="productImage" type="file" placeholder="Product Image" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Product Image'" required>
               <p id="pi-error"></p>
             </div>
             <div class="col-md-12 form-group ml-3">
@@ -73,7 +73,7 @@
               <p id="pq-error"></p>
             </div>
             <div class="col-md-12 form-group ml-3">
-              <button type="submit" id="addButton" value="submit" class="btn btn-success">Submit</button>
+              <button type="submit" id="addButton" value="submit" class="btn btn-success" name = "submit">Submit</button>
               <button type="button" id="cancelButton" class="btn btn-danger">Cancel</button>
               <input type="hidden" id="hiddenField" name="hiddenField" value="<?=$_COOKIE['userLogged']?>">
 

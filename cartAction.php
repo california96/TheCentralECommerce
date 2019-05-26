@@ -3,7 +3,8 @@
 include 'Cart.php';
 $cart = new Cart;
 
-include 'config.php';
+require_once 'config.php';
+$shippingAddress = $_REQUEST['shippingAddress'] != null ? htmlspecialchars($_REQUEST['shippingAddress']) : null;
 if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
     if($_REQUEST['action'] == 'addToCart' && !empty($_REQUEST['id'])){
         $productID = $_REQUEST['id'];
@@ -33,29 +34,48 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
         $deleteItem = $cart->remove($_REQUEST['id']);
         header("Location: viewCart.php");
     }
-    elseif($_REQUEST['action'] == 'placeOrder' && $cart->total_items() > 0 && !empty($_SESSION['sessCustomerID'])){
+    elseif($_REQUEST['action'] == 'placeOrder' && $cart->total_items() > 0 && !empty($_SESSION['cart_contents'])){
         // insert order details into database
-        $insertOrder = $db->query("INSERT INTO orders (customer_id, total_price, created, modified) VALUES ('".$_SESSION['sessCustomerID']."', '".$cart->total()."', '".date("Y-m-d H:i:s")."', '".date("Y-m-d H:i:s")."')");
+          $email = $_COOKIE['userLogged'] != null ? $_COOKIE['userLogged'] : null;
+      //    $shippingAddress = htmlspecialchars($_REQUEST['shippingAddress']);
+          $sql = "SELECT userID  FROM users where email = ?";
+          $stmt = $conn->prepare($sql);
+          $stmt->bind_param('s', $email);
+          $stmt->execute();
+          $stmt->store_result();
+          $stmt->bind_result($uID);
+          $row = $stmt->fetch();
+          $dateNow = date("Y-m-d H:i:s");
+          $status = 1;
+
+
+        $insertOrder = $conn->query("INSERT INTO transactions (transactionAmount, customerID, address,  transactionStatusID) VALUES ('".($cart->total() + 50)."', '".$uID."', '".$shippingAddress."',  '".$status."')");
 
         if($insertOrder){
-            $orderID = $db->insert_id;
+            $transactionID = $conn->insert_id;
             $sql = '';
             // get cart items
             $cartItems = $cart->contents();
             foreach($cartItems as $item){
-            //    $sql .= "INSERT INTO transactions (productID, productQuantity, transactionAmount, customerID, merchantID, dateOrdered) VALUES ('".$item['id']."', '".$item['qty']."', '".($item['subtotal']) + 50"');";
+                $tempItem = $item['productID'];
+                $tempQty = $item['qty'];
+            //   $sql .= "INSERT INTO transactions (productID, productQuantity, transactionAmount, customerID, merchantID, dateOrdered) VALUES ('".$item['id']."', '".$item['qty']."', '".($item['subtotal']) + 50"');";
+                  $sql .= "INSERT INTO transactionitems (transactionID, productID, quantity) VALUES ('".$transactionID."', '".$tempItem."', '".$tempQty."');";
             }
             // insert order items into database
-            $insertOrderItems = $db->multi_query($sql);
+            $insertOrderItems = $conn->multi_query($sql);
 
             if($insertOrderItems){
                 $cart->destroy();
-                header("Location: orderSuccess.php?id=$orderID");
+                header("Location: confirmation.php?id=$transactionID");
             }else{
-                header("Location: checkout.php");
+              //  header("Location: checkout.php");
+              echo ("Mali si insertorderitems");
+               echo("Error description: " . mysqli_error($conn));
             }
         }else{
-            header("Location: checkout.php");
+            echo ("Mali si insert order");
+          //  header("Location: checkout.php");
         }
     }else{
         header("Location: index.php");

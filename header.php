@@ -36,8 +36,8 @@
               </ul>
             </li>
             <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-            <form action = "#" method = "POST">
-            <!--li class="nav-item"><input class = "form-control mr sm-2" type = 'text' placeholder = 'Search'></li-->
+            <form class = "form-inline" action = "#" method = "POST">
+            <li class="nav-item"><input class = "form-control mr sm-2" type = 'text' placeholder = 'Search' name = "searchterm"></li>
           </form>
           </ul>
 
@@ -67,6 +67,7 @@
                   <?php }else{?>
                   <li class="nav-item"><a class="nav-link" href="#"><?php echo $fname . " " . $lname;?></a></li>
                 <?php }?>
+                  <li class ="nav-item"><a class="nav-link" href ="#">Transactions</a></li>
                   <li class="nav-item"><a class="nav-link" href="logout.php">Signout</a></li>
                 </ul>
               </li>
