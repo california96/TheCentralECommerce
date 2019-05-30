@@ -34,18 +34,42 @@
     <div class="container-fluid">
       <div class="column w-100 float-left mt-3">
         <h2>Pending Transactions</h2>
-          <ul class="w-100" style="font-size:20px">
+          <div class = "table-responsive">
+          <table class = "table">
+            <thead>
+              <tr>
+                <th scope = "col">Transaction ID</th>
+                <th scope = "col">Product Name</th>
+                <th scope = "col">Quantity</th>
+                <th scope = "col">Status</th>
+                <th scope = "col">Action</th>
+              </tr>
+            </thead>
+          </table>
+          </div>
         <?php
 
         ?>
-          
+
           <li>Transaction 1</li>
           <li>Transaction 2</li>
           <li>Transaction 3</li>
           <li>Transaction 4</li>
           <li>Transaction 5</li>
-          </ul>
+
         <h2>Recent Transactions</h2>
+        <div class = "table-responsive">
+        <table class = "table">
+          <thead>
+            <tr>
+              <th scope = "col">Transaction ID</th>
+              <th scope = "col">Product Name</th>
+              <th scope = "col">Quantity</th>
+              <th scope = "col">Status</th>
+              <th scope = "col">Action</th>
+            </tr>
+          </thead>
+        </table>
         <ul class="w-100" style="font-size:20px">
       <?php
 
