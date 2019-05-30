@@ -98,7 +98,7 @@ $(document).ready(function(){
     var cp = $("#cpassword").val();
     var np = $("#npassword").val();
     var cnp = $("#cnpassword").val();
-    var thePassword = "<?php echo $thePassword?>";  
+    var thePassword = "<?php echo $thePassword?>";
 
     if(cp!="" & np!="" & cnp!=""){
       $.ajax({
@@ -151,6 +151,16 @@ $(document).ready(function(){
         document.getElementById('cnp-error').innerHTML = "Passwords match";
         document.getElementById('cnp-error').style.color = 'green';
         document.getElementById('saveButton').disabled = false;
+        if(document.getElementById('npassword').value==document.getElementById('cpassword').value){
+          document.getElementById('npassword').style.borderColor = 'red';
+          document.getElementById('cnpassword').style.borderColor = 'red';
+          document.getElementById('cnp-error').innerHTML = "This isn't a new password";
+          document.getElementById('cnp-error').style.color = 'red';
+          document.getElementById('saveButton').disabled = true;
+        }
+        else{
+
+        }
         //alert("MATCH");
       }
       else {
