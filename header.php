@@ -1,5 +1,5 @@
 <?php
-  
+
   require_once('config.php');
   include "Cart.php";
   $cart = new Cart;
@@ -37,7 +37,7 @@
               </ul>
             </li>
             <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-            <form class = "form-inline" action = "#" method = "POST">
+            <form class = "form-inline" action = "search.php" method = "GET">
             <li class="nav-item"><input class = "form-control mr sm-2" type = 'text' placeholder = 'Search' name = "searchterm"></li>
           </form>
           </ul>
@@ -68,7 +68,7 @@
                   <?php }else{?>
                   <li class="nav-item"><a class="nav-link" href="customerprofile.php?id=<?php echo $uid;?>"><?php echo $fname . " " . $lname;?></a></li>
                 <?php }?>
-                  <li class ="nav-item"><a class="nav-link" href ="#">Transactions</a></li>
+                  <li class ="nav-item"><a class="nav-link" href ="businesstransactions.php?id=<?php echo $uid;?>">Transactions</a></li>
                   <li class="nav-item"><a class="nav-link" href="logout.php">Signout</a></li>
                 </ul>
               </li>

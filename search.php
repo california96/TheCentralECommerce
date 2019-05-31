@@ -3,12 +3,12 @@
   include('config.php');
 ?>
 <?php
+  $searchTerm = $_REQUEST['searchterm'];
   $sql = "SELECT productID, productName, productImage, productPrice, category
   FROM products INNER JOIN categories on products.categoryID = categories.categoryID
-  WHERE products.productName LIKE ? OR category LIKE ? ";
-  $searchTerm = $_REQUEST['searchterm'];
-  $stmt = $conn->prepare($sql);
-  $stmt->bind_param("ss", $searchTerm, $searchTerm);
+  WHERE products.productName LIKE '%" .$searchTerm. "%' OR category LIKE '%" .$searchTerm."%' ";
+
+
   $searchresults = mysqli_query($conn, $sql);
  ?>
 <html lang="en">
@@ -16,7 +16,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>The Central - Home</title>
+  <title>Search</title>
 	<link rel="icon" href="img/Fevicon.png" type="image/png">
   <link rel="stylesheet" href="vendors/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="vendors/fontawesome/css/all.min.css">
@@ -33,14 +33,15 @@
   <section class="section-margin calc-60px">
     <div class="container">
       <div class="section-intro pb-60px">
-        <p>Popular Items in the market</p>
-        <h2>Trending <span class="section-intro__style">Products</span></h2>
-      </div>
+
         <div class="row">
       <?php
-      if($fortrending){
+      if(mysqli_num_rows($searchresults)>0){?>
 
-      while($row = @mysqli_fetch_array($fortrending)){?>
+        <h2>Searching results for <span class="section-intro__style"><?php echo $searchTerm?></span></h2>
+      </div>
+      <?php
+      while($row = @mysqli_fetch_array($searchresults)){?>
 
           <div class="col-md-6 col-lg-4 col-xl-3">
           <div class="card text-center card-product">
@@ -58,8 +59,9 @@
             </div>
           </div>
         </div>
-      <?php }}
-      mysqli_close($conn)?>
+      <?php }}else{?>
+        <h2> <span class="section-intro__style"><?php echo $searchTerm?></span> returned no results</h2>
+      <?php }mysqli_close($conn)?>
       </div>
     </div>
   </section>

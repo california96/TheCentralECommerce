@@ -31,17 +31,18 @@
   <?php include('header.php');
   ?>
   <?php
-  $id = $_GET['id'];
+  $id = $_REQUEST['id'];
   //For the benefit of getting the numbers
-  $sql2 = "SELECT transactions.transactionID, products.productName, products.productImage, transactionitems.quantity, transactionstatus.transactionStatus, transactions.dateOrdered
+  $sql = "SELECT transactions.transactionID, products.productName, products.productImage, transactionitems.quantity, transactionstatus.transactionStatus, transactions.dateOrdered, CONCAT (users.firstName, ' ', users.lastName) as 'name'
   FROM transactionitems
   INNER JOIN transactions on transactionitems.transactionID = transactions.transactionID
   INNER JOIN products on transactionitems.productID = products.productID
   INNER JOIN transactionstatus on transactions.transactionStatusID = transactionstatus.transactionStatusID
-  WHERE  (transactions.transactionStatusID in (1,2) )and transactions.customerID = ". $id ."
+  INNER JOIN users on transactions.customerID = users.userID
+  WHERE  (transactions.transactionStatusID in (1,2) )and products.userID = " . $id . "
   GROUP BY transactions.transactionID
   ORDER BY transactions.dateOrdered DESC";
-  $pendingTrNos = mysqli_query($conn, $sql2);
+  $preProcessedNos = mysqli_query($conn, $sql);
 
 
   ?>
@@ -50,7 +51,7 @@
       <div class="column w-100 float-left mt-3">
         <h2>Pending Transactions</h2>
 
-          <?php while($numbers = mysqli_fetch_array($pendingTrNos)){?>
+          <?php while($numbers = mysqli_fetch_array($preProcessedNos)){?>
             <div class = "table-responsive">
             <table class = "table">
               <thead>
@@ -58,7 +59,9 @@
                   <?php
                   $formatDate = strtotime($numbers['dateOrdered']);
                   ?>
-                  <th scope = "col">Transaction No: <?php echo $numbers['transactionID'];?><br/><?php echo date("Y-M-d h:i:sa", $formatDate);?></th>
+                  <th scope = "col">Transaction No: <?php echo $numbers['transactionID'];?><br/><?php echo date("Y-M-d h:i:sa", $formatDate);?>
+                  <br/>
+                  Ordered by: <?php echo $numbers['name'];?></th>
                   <th scope = "col">Product Name</th>
                   <th scope = "col">Quantity</th>
                   <th scope = "col">Status</th>
@@ -68,14 +71,16 @@
 
           <?php
           //For unprocessed transactions
-            $sql = "SELECT transactions.transactionID, products.productName, products.productImage, transactionitems.quantity, transactionstatus.transactionStatus, transactions.dateOrdered
+            $sql2 = "SELECT transactions.transactionID, products.productName, products.productImage, transactionitems.quantity, transactionstatus.transactionStatus, transactions.dateOrdered, CONCAT (users.firstName, ' ', users.lastName) as 'name'
             FROM transactionitems
             INNER JOIN transactions on transactionitems.transactionID = transactions.transactionID
             INNER JOIN products on transactionitems.productID = products.productID
             INNER JOIN transactionstatus on transactions.transactionStatusID = transactionstatus.transactionStatusID
-            WHERE  (transactions.transactionStatusID IN (1,2) ) and transactions.transactionid = " . $numbers['transactionID'] . " and transactions.customerID = ". $id ."
+            INNER JOIN users on transactions.customerID = users.userID
+            WHERE  (transactions.transactionStatusID in (1,2) )and products.userID = " . $id . " and transactions.transactionID = " . $numbers['transactionID'] ."
+            GROUP BY transactions.transactionID
             ORDER BY transactions.dateOrdered DESC";
-              $pendingOrders = mysqli_query($conn, $sql); ?>
+              $pendingOrders = mysqli_query($conn, $sql2); ?>
           <?php while($row = mysqli_fetch_array($pendingOrders)) {?>
 
 
@@ -86,11 +91,10 @@
               <td><?php echo $row['quantity'];?></td>
               <td><?php echo $row['transactionStatus'];?></td>
               <?php if($row['transactionStatus'] == "Pending"){?>
-              <td><a href = "index.php"><button class = "btn btn-primary">Cancel</button></a></td>
-              <?php }else{?>
-              <td><button class = "btn btn-primary">Cancel</button>
-              <br/><br/>
-              <a href = "transactionAction.php?id=<?php echo $numbers['transactionID']?>&action=receive&userID=<?php echo $id;?>"<button class = "btn btn-primary">Received</button></td>
+              <td> <a href = "transactionAction.php?id=<?php echo $numbers['transactionID']?>&action=process&userID=<?php echo $id;?>"<button class = "btn btn-primary">Process Order</button></td>
+              <?php }if($row['transactionStatus'] == "Processed"){?>
+              <td><a href = "transactionAction.php?id=<?php echo $numbers['transactionID']?>&action=cancel&userID=<?php echo $id;?>"<button class = "btn btn-primary">Cancel</button>
+              </td>
               <?php } ?>
                 <?php}?>
 
@@ -101,14 +105,15 @@
       </table>
       </div>
     <?php }?>
-    <?php $sql3 = "SELECT transactions.transactionID, products.productName, products.productImage, transactionitems.quantity, transactionstatus.transactionStatus, transactions.dateOrdered
-    FROM transactionitems
-    INNER JOIN transactions on transactionitems.transactionID = transactions.transactionID
-    INNER JOIN products on transactionitems.productID = products.productID
-    INNER JOIN transactionstatus on transactions.transactionStatusID = transactionstatus.transactionStatusID
-    WHERE  (transactions.transactionStatusID in (3,4) )and transactions.customerID = ". $id ."
-    GROUP BY transactions.transactionID
-    ORDER BY transactions.dateOrdered DESC";
+    <?php   $sql3 = "SELECT transactions.transactionID, products.productName, products.productImage, transactionitems.quantity, transactionstatus.transactionStatus, transactions.dateOrdered, CONCAT (users.firstName, ' ', users.lastName) as 'name'
+      FROM transactionitems
+      INNER JOIN transactions on transactionitems.transactionID = transactions.transactionID
+      INNER JOIN products on transactionitems.productID = products.productID
+      INNER JOIN transactionstatus on transactions.transactionStatusID = transactionstatus.transactionStatusID
+      INNER JOIN users on transactions.customerID = users.userID
+      WHERE  (transactions.transactionStatusID in (3,4) )and products.userID = " . $id . "
+      GROUP BY transactions.transactionID
+      ORDER BY transactions.dateOrdered DESC";
     $oldTrNos = mysqli_query($conn, $sql3);
     ?>
         <h2>Past Transactions</h2>
@@ -128,14 +133,16 @@
           </thead>
           <?php
           //For finished transactions
-            $sql4 = "SELECT transactions.transactionID, products.productName, products.productImage, transactionitems.quantity, transactionstatus.transactionStatus, transactions.dateOrdered
-            FROM transactionitems
-            INNER JOIN transactions on transactionitems.transactionID = transactions.transactionID
-            INNER JOIN products on transactionitems.productID = products.productID
-            INNER JOIN transactionstatus on transactions.transactionStatusID = transactionstatus.transactionStatusID
-            WHERE  (transactions.transactionStatusID IN (3,4) ) and transactions.transactionid = " . $numbers2['transactionID'] . " and transactions.customerID = ". $id ."
-            ORDER BY transactions.dateOrdered DESC";
-              $oldTransactions = mysqli_query($conn, $sql4); ?>
+          $sql4 = "SELECT transactions.transactionID, products.productName, products.productImage, transactionitems.quantity, transactionstatus.transactionStatus, transactions.dateOrdered, CONCAT (users.firstName, ' ', users.lastName) as 'name'
+          FROM transactionitems
+          INNER JOIN transactions on transactionitems.transactionID = transactions.transactionID
+          INNER JOIN products on transactionitems.productID = products.productID
+          INNER JOIN transactionstatus on transactions.transactionStatusID = transactionstatus.transactionStatusID
+          INNER JOIN users on transactions.customerID = users.userID
+          WHERE  (transactions.transactionStatusID in (3,4) )and products.userID = " . $id . " and transactions.transactionID = " . $numbers2['transactionID'] ."
+          GROUP BY transactions.transactionID
+          ORDER BY transactions.dateOrdered DESC";
+          $oldTransactions = mysqli_query($conn, $sql4); ?>
         <?php while($row2 = mysqli_fetch_array($oldTransactions)){?>
           <tr>
             <td><img src = "<?php echo $row2['productImage'];?>" width = 150px height = 150px></td>
@@ -150,6 +157,8 @@
       </div>
     </div>
   </div>
+</div>
+</div>
 </div>
   <?php include('footer.php');
   ?>

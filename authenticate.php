@@ -31,14 +31,7 @@ if(!empty($row)){
 
   }
   else{
-    echo("Username/Password do not match");
-    echo "<br>";
-    echo $email;
-    echo "<br>";
-    echo $password;
-      echo "<br>";
-    echo $hashedPassword;
-      echo "<br>";
+    header("Location: login.php");
   }
 }
 else{
