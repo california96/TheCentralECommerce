@@ -64,7 +64,7 @@
                 <ul class="dropdown-menu">
                   <?php if($rid == 2){?>
                   <li class="nav-item"><a class="nav-link" href="merchantprofile.php"><?php echo $bname;?></a></li>
-                  <li class="nav-item"><a class="nav-link" href="#">Messages</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#">My Transactions</a></li>
                   <li class="nav-item"><a class="nav-link" href="changepasswordform.php">Change Password</a></li>
                   <?php }else{?>
                   <li class="nav-item"><a class="nav-link" href="customerprofile.php"><?php echo $fname . " " . $lname;?></a></li>

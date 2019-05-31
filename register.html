@@ -289,14 +289,13 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
       var child6 = document.getElementById("businessNameDiv");
       var child7 = document.getElementById("checkBoxDiv");
       var child8 = document.getElementById("buttonDiv");
-      var child9 = document.getElementById("addressDiv");
       var isExist = false;
       var prevAcct = "";
         if(child1 && child6){
           isExist = true;
           prevAcct = "Merchant";
         }
-        else if(child1 && child9){
+        else if(child1){
           isExist = true;
           prevAcct = "Customer";
         }
@@ -596,27 +595,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             var div = document.getElementById("confirmPasswordDiv");
             div.appendChild(confirmPassword);
 
-            //For address
-            //For div
-            var addressDiv = document.createElement("div");
-            addressDiv.setAttribute("id", "addressDiv");
-            addressDiv.setAttribute("class", "col-md-12 form-group");
-            var form = document.getElementById("register_form");
-            form.appendChild(addressDiv);
-            //For input
-            var address = document.createElement("textarea");
-            address.setAttribute("class", "form-control");
-            address.setAttribute("id", "address");
-            address.setAttribute("name", "address");
-            address.setAttribute("rows", "4");
-            address.setAttribute("cols", "60");
-            address.setAttribute("style", "resize:none;");
-            address.setAttribute("placeholder", "Address");
-            address.setAttribute("onfocus", "this.placeholder = ''");
-            address.setAttribute("onblur", "this.placeholder = 'Address'");
-            addRequired(address);
-            var div = document.getElementById("addressDiv");
-            div.appendChild(address);
+
 
             //for checkbox
             //For div
@@ -674,7 +653,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
           parent.removeChild(child5);
           parent.removeChild(child7);
           parent.removeChild(child8);
-          parent.removeChild(child9);
           if(choice=="merchant"){
             <!-- Merchant -->
             document.getElementById('error-msg').innerHTML = '';
@@ -956,28 +934,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             addRequired(confirmPassword);
             var div = document.getElementById("confirmPasswordDiv");
             div.appendChild(confirmPassword);
-
-            //For address
-            //For div
-            var addressDiv = document.createElement("div");
-            addressDiv.setAttribute("id", "addressDiv");
-            addressDiv.setAttribute("class", "col-md-12 form-group");
-            var form = document.getElementById("register_form");
-            form.appendChild(addressDiv);
-            //For input
-            var address = document.createElement("textarea");
-            address.setAttribute("class", "form-control");
-            address.setAttribute("id", "address");
-            address.setAttribute("name", "address");
-            address.setAttribute("rows", "4");
-            address.setAttribute("cols", "60");
-            address.setAttribute("style", "resize:none;");
-            address.setAttribute("placeholder", "Address");
-            address.setAttribute("onfocus", "this.placeholder = ''");
-            address.setAttribute("onblur", "this.placeholder = 'Address'");
-            addRequired(address);
-            var div = document.getElementById("addressDiv");
-            div.appendChild(address);
 
             //for checkbox
             //For div
@@ -1310,27 +1266,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             var div = document.getElementById("confirmPasswordDiv");
             div.appendChild(confirmPassword);
 
-            //For address
-            //For div
-            var addressDiv = document.createElement("div");
-            addressDiv.setAttribute("id", "addressDiv");
-            addressDiv.setAttribute("class", "col-md-12 form-group");
-            var form = document.getElementById("register_form");
-            form.appendChild(addressDiv);
-            //For input
-            var address = document.createElement("textarea");
-            address.setAttribute("class", "form-control");
-            address.setAttribute("id", "address");
-            address.setAttribute("name", "address");
-            address.setAttribute("rows", "4");
-            address.setAttribute("cols", "60");
-            address.setAttribute("style", "resize:none;");
-            address.setAttribute("placeholder", "Address");
-            address.setAttribute("onfocus", "this.placeholder = ''");
-            address.setAttribute("onblur", "this.placeholder = 'Address'");
-            addRequired(address);
-            var div = document.getElementById("addressDiv");
-            div.appendChild(address);
 
             //for checkbox
             //For div

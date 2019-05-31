@@ -8,7 +8,6 @@ $lastName = $_REQUEST['lastName'];
 $email = $_REQUEST['email'];
 $password = $_REQUEST['password'];
 $confirmPassword = $_REQUEST['confirmPassword'];
-$address = $_REQUEST['address'];
 $roleID = accountTypeVerification($_POST["accountType"]);
 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 $isEmailValid = false;
@@ -44,10 +43,10 @@ if($isEmailValid){
     switch($roleID){
       case 1:
         //Meaning customer
-        $sql = "INSERT INTO users(email, password, firstName, lastName, roleID, address) VALUES(?, ?, ? ,?,?,?)";
+        $sql = "INSERT INTO users(email, password, firstName, lastName, roleID) VALUES(?, ?, ? ,?,?)";
 
         if($stmt = mysqli_prepare($conn, $sql)){
-          mysqli_stmt_bind_param($stmt, "ssssds", $email, $hashedPassword, $firstName,$lastName, $roleID, $address);
+          mysqli_stmt_bind_param($stmt, "ssssd", $email, $hashedPassword, $firstName,$lastName, $roleID);
 
           if(mysqli_stmt_execute($stmt)){
             echo "Member registered";
