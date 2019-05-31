@@ -1,4 +1,5 @@
 <?php
+  
   require_once('config.php');
   include "Cart.php";
   $cart = new Cart;
@@ -31,7 +32,7 @@
                 aria-expanded="false">Pages</a>
               <ul class="dropdown-menu">
 
-                <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+                <li class="nav-item"><a class="nav-link" href="register.php">Register</a></li>
                 <li class="nav-item"><a class="nav-link" href="tracking-order.html">Tracking</a></li>
               </ul>
             </li>
@@ -50,12 +51,12 @@
             if(isset($_COOKIE['userLogged'])){ ?>
               <?php
                 $email = $_COOKIE['userLogged'] != null ? $_COOKIE['userLogged'] : null;
-                $sql = "SELECT firstName, lastName, roleID, businessName FROM users where email = ?";
+                $sql = "SELECT userID, firstName, lastName, roleID, businessName FROM users where email = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param('s', $email);
                 $stmt->execute();
                 $stmt->store_result();
-                $stmt->bind_result($fname, $lname, $rid, $bname);
+                $stmt->bind_result($uid, $fname, $lname, $rid, $bname);
                 $row = $stmt->fetch();
                 ?>
               <li class="nav-item submenu dropdown">
@@ -65,7 +66,7 @@
                   <?php if($rid == 2){?>
                   <li class="nav-item"><a class="nav-link" href="merchantprofile.php"><?php echo $bname;?></a></li>
                   <?php }else{?>
-                  <li class="nav-item"><a class="nav-link" href="#"><?php echo $fname . " " . $lname;?></a></li>
+                  <li class="nav-item"><a class="nav-link" href="customerprofile.php?id=<?php echo $uid;?>"><?php echo $fname . " " . $lname;?></a></li>
                 <?php }?>
                   <li class ="nav-item"><a class="nav-link" href ="#">Transactions</a></li>
                   <li class="nav-item"><a class="nav-link" href="logout.php">Signout</a></li>
