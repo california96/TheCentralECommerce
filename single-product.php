@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <?php
   include_once('config.php');
+  include 'Cart.php';
+  $cart = new Cart;
 ?>
 <?php
   $sql = "SELECT productName, productImage, businessName, productPrice, productDescription, category, productQuantity
@@ -19,7 +21,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Aroma Shop - Product Details</title>
+  <title>Product Details</title>
 	<link rel="icon" href="img/Fevicon.png" type="image/png">
   <link rel="stylesheet" href="vendors/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="vendors/fontawesome/css/all.min.css">
@@ -69,11 +71,14 @@
                 </ul>
               </li>
               <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+              <form class = "form-inline" action = "#" method = "POST">
+              <li class="nav-item"><input class = "form-control mr sm-2" type = 'text' placeholder = 'Search' name = "searchterm"></li>
+            </form>
             </ul>
 
             <ul class="nav-shop">
               <li class="nav-item"><button><i class="ti-search"></i></button></li>
-              <li class="nav-item"><button><i class="ti-shopping-cart"></i><span class="nav-shop__circle">3</span></button> </li>
+              <li class="nav-item"><button><i class="ti-shopping-cart"></i><span class="nav-shop__circle"><?php echo count($cart->contents());?></span></button> </li>
               <li class="nav-item"><a class="button button-header" href="login.php">Login</a></li>
             </ul>
           </div>
@@ -118,7 +123,8 @@
                   <input type = "hidden" name = "id" value = <?php echo $id;?>>
                   <input type="number" name="qty" id="sst" size="2" min=1 max=<?php echo $productQuantity;?> value="1" title="Quantity:" class="input-text qty" step = "1">
                   <!--button class="btn btn-info" type = "submit">Add to Cart</a-->
-                  <a class="button primary-btn" href="javascript:{}" onclick = "document.getElementById('addProductToCart').submit();">Add to Cart</a>
+                  <a class="button primary-btn" href="javascript:{}" onclick = "addToCartDaw();">Add to Cart</a>
+
               </form>
 						</div>
 
@@ -306,15 +312,14 @@
 			</div>
 		</div>
 	</section>
-	<!--================End Product Description Area =================-->
 
-	<!--================ Start related Product area =================-->
 
-	<!--================ end related Product area =================-->
+  <!--End Checkout Modal-->
 
   <!--================ Start footer Area  =================-->
 	<?php include ('footer.php');?>
 	<!--================ End footer Area  =================-->
+
 
 
 
@@ -326,5 +331,19 @@
   <script src="vendors/jquery.ajaxchimp.min.js"></script>
   <script src="vendors/mail-script.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    function addToCartDaw(){
+      var tanong = confirm("Do you want to continue shopping?");
+      if(tanong == true){
+        alert("Shopping");
+          $('#addProductToCart').attr('action', 'cartAction.php?action="continueShopping"');
+          document.getElementById('addProductToCart').action() = "cartAction.php?action=continueShopping";
+          document.getElementById('addProductToCart').submit();
+      }
+      else{
+        document.getElementById('addProductToCart').submit();
+      }
+    }
+  </script>
 </body>
 </html>

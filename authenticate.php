@@ -6,7 +6,6 @@ include_once('config.php');
 $email = $_REQUEST["email"];
 $password = $_REQUEST["password"];
 $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
 $sql = "SELECT email, password, firstName, lastName, roleID FROM users WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('s', $email);
@@ -28,17 +27,9 @@ if(!empty($row)){
       //merchant
       header("Location: merchantprofile.php");
     }
-
   }
   else{
-    echo("Username/Password do not match");
-    echo "<br>";
-    echo $email;
-    echo "<br>";
-    echo $password;
-      echo "<br>";
-    echo $hashedPassword;
-      echo "<br>";
+    header("Location: login.php");
   }
 }
 else{

@@ -7,7 +7,9 @@
 ?>
 <?php
   $sql = "SELECT productID, productName, productImage, productPrice, category
-  FROM products INNER JOIN categories on products.categoryID = categories.categoryID";
+  FROM products INNER JOIN categories on products.categoryID = categories.categoryID
+  WHERE products.productQuantity > 0
+  AND status = 1";
   $fortrending = mysqli_query($conn, $sql);
  ?>
 <html lang="en">

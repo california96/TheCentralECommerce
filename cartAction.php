@@ -4,7 +4,7 @@ include 'Cart.php';
 $cart = new Cart;
 
 require_once 'config.php';
-$shippingAddress = $_REQUEST['shippingAddress'] != null ? htmlspecialchars($_REQUEST['shippingAddress']) : null;
+//$shippingAddress = $_REQUEST['shippingAddress'] != null ? htmlspecialchars($_REQUEST['shippingAddress']) : null;
 if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
     if($_REQUEST['action'] == 'addToCart' && !empty($_REQUEST['id'])){
         $productID = $_REQUEST['id'];
@@ -19,9 +19,30 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
             'qty' => $qty
         );
         $insertItem = $cart->insert($itemData);
+
         $redirectLoc = $insertItem ?'viewcart.php':'index.php';
+
         header("Location: ".$redirectLoc);
     }
+    else if($_REQUEST['action'] == 'continueShopping' && !empty($_REQUEST['id'])){
+          $productID = $_REQUEST['id'];
+          $qty = $_REQUEST['qty'];
+          $query = $conn->query("SELECT * FROM products WHERE productID = ".$productID);
+          $row = $query->fetch_assoc();
+          $itemData = array(
+              'productID' => $row['productID'],
+              'productName' => $row['productName'],
+              'productPrice' => $row['productPrice'],
+              'productImage' => $row['productImage'],
+              'qty' => $qty
+          );
+          $insertItem = $cart->insert($itemData);
+          $itemID = $_REQUEST['id'];
+          if($insertItem){
+            header("Location: single-product.php?id=".$itemID);
+          }
+        #  header("Location: ".$redirectLoc);
+      }
     elseif($_REQUEST['action'] == 'updateCartItem' && !empty($_REQUEST['id'])){
         $itemData = array(
             'productID' => $_REQUEST['id'],
@@ -83,3 +104,24 @@ if(isset($_REQUEST['action']) && !empty($_REQUEST['action'])){
 }else{
   header("Location: index.php");
 }
+?>
+<!-- Delete Modal Box -->
+<div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel" style="color:red"><u>Delete</u></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="color: white">What do you want to do next?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Continue Shopping</button>
+        <a class="btn btn-danger btn-ok">Proceed to Checkout</a>
+      </div>
+    </div>
+  </div>
+</div>
