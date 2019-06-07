@@ -116,7 +116,7 @@
                   $result = $stmt->get_result();
                 while($row = $result->fetch_assoc()) {
           ?>
-                  <div class="column float-left mr-1 mb-5" style="width:200">
+                  <div class="column float-left mr-2 mb-5 w-25">
                     <!-- Checkbox -->
                     <?php if($row['status']==1){?>
                             <input type="checkbox" id="status/<?php echo $row['productID']; ?>" class="chbStatus" name="status" checked> Available on the Market
@@ -124,8 +124,8 @@
                             <input type="checkbox" id="status/<?php echo $row['productID']; ?>" class="chbStatus" name="status" > Available on the Market
                     <?php }?>
 
-                    <div class="card w-100" width = "210" height = "402">
-                      <img  src=<?php echo $row['productImage'];?> class="rounded mx-auto d-block img-fluid" width="128px" height="128px">
+                    <div class="card w-100">
+                      <img  src=<?php echo $row['productImage'];?> class="rounded mx-auto d-block" width="200" height="200">
                       <div class="card-body">
                         <h4 class="card-title text-center"><?php echo $row['productName']; ?></h4>
                         <p class="card-text text-center">Php <?php echo $row['productPrice']; ?></p>

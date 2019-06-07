@@ -67,6 +67,7 @@
                   <li class ="nav-item"><a class="nav-link" href ="businesstransactions.php?id=<?php echo $uid;?>">My Transactions</a></li>
                   <?php }else{?>
                   <li class="nav-item"><a class="nav-link" href="customerprofile.php?id=<?php echo $uid;?>"><?php echo $fname . " " . $lname;?></a></li>
+                  <li class="nav-item"><a class="nav-link" href="changeAccountTypeForm.php">Sell on the Central</a></li>
                 <?php }?>
                   <li class="nav-item"><a class="nav-link" href="changepasswordform.php">Change Password</a></li>
                   <li class="nav-item"><a class="nav-link" href="logout.php">Signout</a></li>

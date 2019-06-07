@@ -48,7 +48,10 @@
     <div class="container-fluid">
       <div class="column w-100 float-left mt-3">
         <h2>Pending Transactions</h2>
+          <?php while($numbers = mysqli_fetch_array($preProcessedNos)){
 
+          }
+            ?>
           <?php while($numbers = mysqli_fetch_array($preProcessedNos)){?>
             <div class = "table-responsive">
             <table class = "table">
