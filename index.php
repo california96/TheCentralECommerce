@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <?php
+
+?>
+<?php
   include('config.php');
 ?>
 <?php
   $sql = "SELECT productID, productName, productImage, productPrice, category
-  FROM products INNER JOIN categories on products.categoryID = categories.categoryID";
+  FROM products INNER JOIN categories on products.categoryID = categories.categoryID
+  WHERE products.productQuantity > 0
+  AND status = 1";
   $fortrending = mysqli_query($conn, $sql);
  ?>
 <html lang="en">
@@ -59,15 +64,16 @@
           <p>Popular Items in the market</p>
           <h2>Trending <span class="section-intro__style">Products</span></h2>
         </div>
+          <div class="row">
         <?php
         if($fortrending){
 
         while($row = @mysqli_fetch_array($fortrending)){?>
-        <!--div class="row"-->
-          <div class="col-md-6 col-lg-4 col-xl-3">
+
+            <div class="col-md-6 col-lg-4 col-xl-3">
             <div class="card text-center card-product">
               <div class="card-product__img">
-                <img class="card-img" src=<?php echo $row['productImage'];?> alt="">
+                <img class="card-img" src=<?php echo $row['productImage'];?> alt="" width="128px" height="128px">
                 <ul class="card-product__imgOverlay">
                   <li><button><i class="ti-search"></i></button></li>
                   <li><button><i class="ti-shopping-cart"></i></button></li>
@@ -82,7 +88,7 @@
           </div>
         <?php }}
         mysqli_close($conn)?>
-        <!--/div-->
+        </div>
       </div>
     </section>
     <!-- ================ trending product section end ================= -->
@@ -248,7 +254,7 @@
 
 
     <!-- ================ Subscribe section start ================= -->
-    <section class="subscribe-position">
+    <!--section class="subscribe-position">
       <div class="container">
         <div class="subscribe text-center">
           <h3 class="subscribe__title">Subscribe to our newsletter</h3>
@@ -269,7 +275,7 @@
 
         </div>
       </div>
-    </section>
+    </section-->
     <!-- ================ Subscribe section end ================= -->
 
 

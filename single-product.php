@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <?php
   include_once('config.php');
+  include 'Cart.php';
+  $cart = new Cart;
 ?>
 <?php
-  $sql = "SELECT productName, productImage, businessName, productPrice, productDescription, category
+  $sql = "SELECT productName, productImage, businessName, productPrice, productDescription, category, productQuantity
   FROM products INNER JOIN categories on products.categoryID = categories.categoryID
   INNER JOIN users on products.userID = users.userID
   WHERE productID = ?";
@@ -12,14 +14,14 @@
   $stmt->bind_param("i", $_GET['id']);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($productName, $productImage, $businessName, $productPrice, $productDescription, $category);
+  $stmt->bind_result($productName, $productImage, $businessName, $productPrice, $productDescription, $category, $productQuantity);
  ?>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Aroma Shop - Product Details</title>
+  <title>Product Details</title>
 	<link rel="icon" href="img/Fevicon.png" type="image/png">
   <link rel="stylesheet" href="vendors/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="vendors/fontawesome/css/all.min.css">
@@ -28,12 +30,62 @@
   <link rel="stylesheet" href="vendors/nice-select/nice-select.css">
   <link rel="stylesheet" href="vendors/owl-carousel/owl.theme.default.min.css">
   <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
-
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 	<!--================ Start Header Menu Area =================-->
-	<?php include('header.php');?>
+	<header class="header_area">
+    <div class="main_menu">
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+          <a class="navbar-brand logo_h" href="index.php"><img src="img/logo.png" alt=""></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+            <ul class="nav navbar-nav menu_nav ml-auto mr-auto">
+              <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+              <li class="nav-item active submenu dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">Shop</a>
+
+							</li>
+              <li class="nav-item submenu dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">Blog</a>
+                <ul class="dropdown-menu">
+                  <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+                  <li class="nav-item"><a class="nav-link" href="single-blog.html">Blog Details</a></li>
+                </ul>
+							</li>
+							<li class="nav-item submenu dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">Pages</a>
+                <ul class="dropdown-menu">
+									<li class="nav-item"><a class="nav-link" href="login.php">Login</a></li>
+                  <li class="nav-item"><a class="nav-link" href="register.html">Register</a></li>
+                  <li class="nav-item"><a class="nav-link" href="tracking-order.html">Tracking</a></li>
+                </ul>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+              <form class = "form-inline" action = "#" method = "POST">
+              <li class="nav-item"><input class = "form-control mr sm-2" type = 'text' placeholder = 'Search' name = "searchterm"></li>
+            </form>
+            </ul>
+
+            <ul class="nav-shop">
+              <li class="nav-item"><button><i class="ti-search"></i></button></li>
+              <li class="nav-item"><button><i class="ti-shopping-cart"></i><span class="nav-shop__circle"><?php echo count($cart->contents());?></span></button> </li>
+              <li class="nav-item"><a class="button button-header" href="login.php">Login</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
 	<!--================ End Header Menu Area =================-->
 
 
@@ -61,24 +113,22 @@
 						<h3><?php echo $productName;?></h3>
 						<h2>Php <?php echo $productPrice;?></h2>
 						<ul class="list">
-							<li><a class="active" href="#"><span>Category</span> : <?php echo $category;?></a></li>
-							<li><a href="#"><span>Availibility</span> : In Stock</a></li>
+							<li><a class="active" href="viewcart.php"><span>Category</span> : <?php echo $category;?></a></li>
+							<li><a href="#"><span>Availibility</span> : <?php echo $productQuantity; ?> In Stock</a></li>
 						</ul>
 						<p>Seller: <?php echo $businessName;?></p>
-						<div class="product_count">
-              <label for="qty">Quantity:</label>
-              <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-							 class="increase items-count" type="button"><i class="ti-angle-left"></i></button>
-							<input type="text" name="qty" id="sst" size="2" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-							<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-               class="reduced items-count" type="button"><i class="ti-angle-right"></i></button>
-							<a class="button primary-btn" href="#">Add to Cart</a>
+              <form action = "cartAction.php?action=addToCart" method = "post" id = "addProductToCart">
+                <div class="product_count">
+                  <label for="qty">Quantity:</label>
+                  <input type = "hidden" name = "id" value = <?php echo $id;?>>
+                  <input type="number" name="qty" id="sst" size="2" min=1 max=<?php echo $productQuantity;?> value="1" title="Quantity:" class="input-text qty" step = "1">
+                  <!--button class="btn btn-info" type = "submit">Add to Cart</a-->
+                  <a class="button primary-btn" href="javascript:{}" onclick = "addToCartDaw();">Add to Cart</a>
+
+              </form>
 						</div>
-						<div class="card_area d-flex align-items-center">
-							<a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
-							<a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
-						</div>
-					</div>
+
+
 
 				</div>
 			</div>
@@ -93,25 +143,17 @@
 				<li class="nav-item">
 					<a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Description</a>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact"
-					 aria-selected="false">Comments</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" id="review-tab" data-toggle="tab" href="#review" role="tab" aria-controls="review"
-					 aria-selected="false">Reviews</a>
-				</li>
 			</ul>
 			<div class="tab-content" id="myTabContent">
 				<div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
-					<p><?php echo $productDescription?></p>
+					<p><?php echo $productDescription;?></p>
 
 
 				</div>
       <?php }
       $stmt->close();
       $conn->close();?>
-				<!--div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+				<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 					<div class="table-responsive">
 						<table class="table">
 							<tbody>
@@ -182,8 +224,8 @@
 							</tbody>
 						</table>
 					</div>
-				</div-->
-				<!--div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+				</div>
+				<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
 					<div class="row">
 						<div class="col-lg-6">
 							<div class="comment_list">
@@ -265,250 +307,19 @@
 							</div>
 						</div>
 					</div>
-				</div-->
-				<!--div class="tab-pane fade show active" id="review" role="tabpanel" aria-labelledby="review-tab">
-					<div class="row">
-						<div class="col-lg-6">
-							<div class="row total_rate">
-								<div class="col-6">
-									<div class="box_total">
-										<h5>Overall</h5>
-										<h4>4.0</h4>
-										<h6>(03 Reviews)</h6>
-									</div>
-								</div>
-								<div class="col-6">
-									<div class="rating_list">
-										<h3>Based on 3 Reviews</h3>
-										<ul class="list">
-											<li><a href="#">5 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
-													 class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
-											<li><a href="#">4 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
-													 class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
-											<li><a href="#">3 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
-													 class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
-											<li><a href="#">2 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
-													 class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
-											<li><a href="#">1 Star <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
-													 class="fa fa-star"></i><i class="fa fa-star"></i> 01</a></li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<div class="review_list">
-								<div class="review_item">
-									<div class="media">
-										<div class="d-flex">
-											<img src="img/product/review-1.png" alt="">
-										</div>
-										<div class="media-body">
-											<h4>Blake Ruiz</h4>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-										commodo</p>
-								</div>
-								<div class="review_item">
-									<div class="media">
-										<div class="d-flex">
-											<img src="img/product/review-2.png" alt="">
-										</div>
-										<div class="media-body">
-											<h4>Blake Ruiz</h4>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-										commodo</p>
-								</div>
-								<div class="review_item">
-									<div class="media">
-										<div class="d-flex">
-											<img src="img/product/review-3.png" alt="">
-										</div>
-										<div class="media-body">
-											<h4>Blake Ruiz</h4>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-									</div>
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-										commodo</p>
-								</div>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<div class="review_box">
-								<h4>Add a Review</h4>
-								<p>Your Rating:</p>
-								<ul class="list">
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-									<li><a href="#"><i class="fa fa-star"></i></a></li>
-								</ul>
-								<p>Outstanding</p>
-                <form action="#/" class="form-contact form-review mt-3">
-                  <div class="form-group">
-                    <input class="form-control" name="name" type="text" placeholder="Enter your name" required>
-                  </div>
-                  <div class="form-group">
-                    <input class="form-control" name="email" type="email" placeholder="Enter email address" required>
-                  </div>
-                  <div class="form-group">
-                    <input class="form-control" name="subject" type="text" placeholder="Enter Subject">
-                  </div>
-                  <div class="form-group">
-                    <textarea class="form-control different-control w-100" name="textarea" id="textarea" cols="30" rows="5" placeholder="Enter Message"></textarea>
-                  </div>
-                  <div class="form-group text-center text-md-right mt-3">
-                    <button type="submit" class="button button--active button-review">Submit Now</button>
-                  </div>
-                </form>
-							</div>
-						</div>
-					</div>
-				</div-->
+				</div>
+				</div>
 			</div>
 		</div>
 	</section>
-	<!--================End Product Description Area =================-->
 
-	<!--================ Start related Product area =================-->
-	<section class="related-product-area section-margin--small mt-0">
-		<div class="container">
-			<div class="section-intro pb-60px">
-        <p>Popular Item in the market</p>
-        <h2>Top <span class="section-intro__style">Product</span></h2>
-      </div>
-			<div class="row mt-30">
-        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
-          <div class="single-search-product-wrapper">
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-1.png" alt=""></a>
-              <div class="desc">
-                  <a href="#" class="title">Gray Coffee Cup</a>
-                  <div class="price">$170.00</div>
-              </div>
-            </div>
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-2.png" alt=""></a>
-              <div class="desc">
-                <a href="#" class="title">Gray Coffee Cup</a>
-                <div class="price">$170.00</div>
-              </div>
-            </div>
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-3.png" alt=""></a>
-              <div class="desc">
-                <a href="#" class="title">Gray Coffee Cup</a>
-                <div class="price">$170.00</div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
-          <div class="single-search-product-wrapper">
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-4.png" alt=""></a>
-              <div class="desc">
-                  <a href="#" class="title">Gray Coffee Cup</a>
-                  <div class="price">$170.00</div>
-              </div>
-            </div>
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-5.png" alt=""></a>
-              <div class="desc">
-                <a href="#" class="title">Gray Coffee Cup</a>
-                <div class="price">$170.00</div>
-              </div>
-            </div>
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-6.png" alt=""></a>
-              <div class="desc">
-                <a href="#" class="title">Gray Coffee Cup</a>
-                <div class="price">$170.00</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
-          <div class="single-search-product-wrapper">
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-7.png" alt=""></a>
-              <div class="desc">
-                  <a href="#" class="title">Gray Coffee Cup</a>
-                  <div class="price">$170.00</div>
-              </div>
-            </div>
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-8.png" alt=""></a>
-              <div class="desc">
-                <a href="#" class="title">Gray Coffee Cup</a>
-                <div class="price">$170.00</div>
-              </div>
-            </div>
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-9.png" alt=""></a>
-              <div class="desc">
-                <a href="#" class="title">Gray Coffee Cup</a>
-                <div class="price">$170.00</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-sm-6 col-xl-3 mb-4 mb-xl-0">
-          <div class="single-search-product-wrapper">
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-1.png" alt=""></a>
-              <div class="desc">
-                  <a href="#" class="title">Gray Coffee Cup</a>
-                  <div class="price">$170.00</div>
-              </div>
-            </div>
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-2.png" alt=""></a>
-              <div class="desc">
-                <a href="#" class="title">Gray Coffee Cup</a>
-                <div class="price">$170.00</div>
-              </div>
-            </div>
-            <div class="single-search-product d-flex">
-              <a href="#"><img src="img/product/product-sm-3.png" alt=""></a>
-              <div class="desc">
-                <a href="#" class="title">Gray Coffee Cup</a>
-                <div class="price">$170.00</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-		</div>
-	</section>
-	<!--================ end related Product area =================-->
+  <!--End Checkout Modal-->
 
   <!--================ Start footer Area  =================-->
-	<?php include('footer.php');?>
+	<?php include ('footer.php');?>
 	<!--================ End footer Area  =================-->
+
 
 
 
@@ -520,5 +331,19 @@
   <script src="vendors/jquery.ajaxchimp.min.js"></script>
   <script src="vendors/mail-script.js"></script>
   <script src="js/main.js"></script>
+  <script>
+    function addToCartDaw(){
+      var tanong = confirm("Do you want to continue shopping?");
+      if(tanong == true){
+        alert("Shopping");
+          $('#addProductToCart').attr('action', 'cartAction.php?action="continueShopping"');
+          document.getElementById('addProductToCart').action() = "cartAction.php?action=continueShopping";
+          document.getElementById('addProductToCart').submit();
+      }
+      else{
+        document.getElementById('addProductToCart').submit();
+      }
+    }
+  </script>
 </body>
 </html>
